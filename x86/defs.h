@@ -8,7 +8,7 @@
 #define RUNTIME_STACK_SIZE	256 * 1024
 #define RUNTIME_GUARD_SIZE	256 * 1024
 
-#define N 3
+#define N 4
 
 struct thread_tf {
 	/* argument registers, can be clobbered by callee */
