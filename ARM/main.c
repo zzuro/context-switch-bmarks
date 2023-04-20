@@ -13,7 +13,7 @@ static inline uint64_t
 read_pmccntr(void)
 {
 	uint64_t val;
-	asm volatile("mrs %0, pmccntr_el0" : "=r"(val));
+	asm volatile("mrs %0, CNTVCT_EL0" : "=r"(val));
 	return val;
 }
 
