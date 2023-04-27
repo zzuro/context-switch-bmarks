@@ -23,7 +23,6 @@ struct thread_tf {
 
 
 	//maybe I have to store here also the other register
-	/* callee-saved registers */
 	uint64_t x19; //rbx
 	uint64_t x29; //rbp
 	uint64_t x12;
@@ -40,6 +39,17 @@ struct thread_tf {
 	/* special-purpose registers */
 	uint64_t pc;	/* instruction pointer */
 	uint64_t sp;	/* stack pointer */
+
+	/*additional register used with O3*/
+	uint64_t x20;
+	uint64_t x21;
+	uint64_t x22;
+	uint64_t x23;
+	uint64_t x24;
+	uint64_t x25;
+	uint64_t x26;
+	uint64_t x27;
+	uint64_t x28;
 };
 
 
@@ -54,9 +64,8 @@ struct thread_tf {
 #define STACK_PTR_SIZE	(RUNTIME_STACK_SIZE / sizeof(uintptr_t))
 
 typedef struct thread {
-	struct thread_tf	tf;                     //reg
-	uintptr_t	        stack[STACK_PTR_SIZE];  //stack
-    void (*fn)(void*);                          //function to execute
+	struct thread_tf	tf;     //reg
+	uintptr_t*	        stack;  //stack
 }thread;
 
 
@@ -77,7 +86,7 @@ void thread_next(){
 
 thread* contex_switch(void (*fn)(void*), void* arg, void (*th_exit)(void)){
     thread* th = (thread*) malloc(sizeof(thread));
-    th->fn = fn;
+	th->stack = malloc(STACK_PTR_SIZE * sizeof(uintptr_t));
 
     th->stack[STACK_PTR_SIZE - 2] = (uintptr_t)th_exit;
     th->tf.sp = (uintptr_t)&th->stack[STACK_PTR_SIZE - 2];

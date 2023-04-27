@@ -50,7 +50,7 @@ int main(){
     end = read_pmccntr();
    
     FILE *f = fopen("//home//ubuntu//context-switch-bmarks//ARM//result.txt", "w");
-    fprintf(f, "%lu\n", end - start);
+    printf("%lu\n", end - start);
     fclose(f);
 
     return 0;

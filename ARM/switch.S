@@ -39,6 +39,16 @@
 #define _PC	#144	/* instruction pointer */
 #define _SP	#152	/* stack pointer */
 
+#define _X20 #160
+#define _X21 #168
+#define _X22 #176
+#define _X23 #184
+#define _X24 #192
+#define _X25 #200
+#define _X26 #208
+#define _X27 #216
+#define _X28 #224
+
 /**
  * __jmp_thread - executes a thread from the runtime
  * @tf: the trap frame to restore (%rdi)
@@ -60,15 +70,16 @@ __jmp_thread:
 
 	/* restore callee regs */
 	ldr x19, [x0, _X19]
+	ldr x20, [x0, _X20]
+	ldr x21, [x0, _X21]
+	ldr x22, [x0, _X22]
+	ldr x23, [x0, _X23]
+	ldr x24, [x0, _X24]
+	ldr x25, [x0, _X25]
+	ldr x26, [x0, _X26]
+	ldr x27, [x0, _X27]
+	ldr x28, [x0, _X28]
 	ldr x29, [x0, _X29]
-	ldr x12, [x0, _X12]
-	ldr x13, [x0, _X13]
-	ldr x14, [x0, _X14]
-	ldr x15, [x0, _X15]
-
-	ldr x16, [x0, _X16]
-	ldr x17, [x0, _X17]
-	ldr x18, [x0, _X18]
 	ldr x30, [x0, _X30]
 
 	/* set first argument (in case new thread) */
@@ -102,16 +113,18 @@ __jmp_thread_direct:
 	str x4, [x0, _SP]
 
 	/* save callee regs */
+	
 	str x19, [x0, _X19]
+	str x20, [x0, _X20]
+	str x21, [x0, _X21]
+	str x22, [x0, _X22]
+	str x23, [x0, _X23]
+	str x24, [x0, _X24]
+	str x25, [x0, _X25]
+	str x26, [x0, _X26]
+	str x27, [x0, _X27]
+	str x28, [x0, _X28]
 	str x29, [x0, _X29]
-	str x12, [x0, _X12]
-	str x13, [x0, _X13]
-	str x14, [x0, _X14]
-	str x15, [x0, _X15]
-
-	str x16, [x0, _X16]
-	str x17, [x0, _X17]
-	str x18, [x0, _X18]
 	str x30, [x0, _X30]
 
 	/* restore ip and stack */
@@ -125,14 +138,16 @@ __jmp_thread_direct:
 
 	/* restore callee regs */
 	ldr x19, [x1, _X19]
+	ldr x20, [x1, _X20]
+	ldr x21, [x1, _X21]
+	ldr x22, [x1, _X22]
+	ldr x23, [x1, _X23]
+	ldr x24, [x1, _X24]
+	ldr x25, [x1, _X25]
+	ldr x26, [x1, _X26]
+	ldr x27, [x1, _X27]
+	ldr x28, [x1, _X28]
 	ldr x29, [x1, _X29]
-	ldr x12, [x1, _X12]
-	ldr x13, [x1, _X13]
-	ldr x14, [x1, _X14]
-	ldr x15, [x1, _X15]
-	ldr x16, [x1, _X16]
-	ldr x17, [x1, _X17]
-	ldr x18, [x1, _X18]
 	ldr x30, [x1, _X30]
 
 	/* set first argument (in case new thread) */
