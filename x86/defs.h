@@ -47,7 +47,7 @@ struct thread_tf {
 
 typedef struct thread {
 	struct thread_tf	tf;                     //reg
-	uintptr_t	        stack[STACK_PTR_SIZE];  //stack
+	uintptr_t*	        stack;  //stack
     void (*fn)(void*);                          //function to execute
 }thread;
 
@@ -64,13 +64,14 @@ void thread_exit(){
 }
 
 void thread_next(){
-	__jmp_thread_direct(&threads[1]->tf, &threads[2]->tf);
+	__jmp_thread_direct(&threads[1]->tf, &threads[0]->tf);
 }
 
 thread* contex_switch(void (*fn)(void*), void* arg, void (*th_exit)(void)){
     thread* th = (thread*) malloc(sizeof(thread));
     th->fn = fn;
-    
+    th->stack = malloc(STACK_PTR_SIZE * sizeof(uintptr_t));
+	
     th->stack[STACK_PTR_SIZE - 1] = (uintptr_t)th_exit;
     th->tf.rsp = (uintptr_t)&th->stack[STACK_PTR_SIZE - 1];
 

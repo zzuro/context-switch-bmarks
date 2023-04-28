@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "defs.h"
 #define LOOP 10000
 
-uint64_t start;
-uint64_t end;
+time_t start;
+time_t end;
 
 
 //helper function to read cpu cycle
@@ -17,6 +18,14 @@ static inline uint64_t rdtsc(void)
 
 }
 
+static inline time_t nanoseconds(void){
+
+    struct timespec ts;
+    clock_gettime(CLOCK_REALTIME, &ts);
+    return ts.tv_nsec;
+}
+
+
 void workA(){
     uint64_t res = 0;
     uint32_t array[LOOP];
@@ -25,13 +34,13 @@ void workA(){
         res += array[i];
     }
       
-    start = rdtsc();
+    start = nanoseconds();
 }
 
 int main(){
 
     threads[0] = (thread*) malloc(sizeof(thread));
-    threads[1] = contex_switch(workA, NULL, thread_exit);
+    threads[1] = contex_switch(workA, NULL, thread_next);
     
 
     //do some work
@@ -44,9 +53,10 @@ int main(){
 
     //jump to thread and back
     __jmp_thread_direct(&threads[0]->tf, &threads[1]->tf);
-    end = rdtsc();
+    end = nanoseconds();
     
-    FILE *f = fopen("//home//avezzu//context-switch-bmarks//x86//result.txt", "w");
+    FILE *f = fopen("//home//blueadmin//avezzu//context-switch-bmarks//x86//result.txt", "w");
+    printf("%lu\n", end - start);
     fprintf(f, "%lu\n", end - start);
     fclose(f);
 
