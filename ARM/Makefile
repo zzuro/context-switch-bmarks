@@ -1,6 +1,7 @@
 CC = gcc 
 CFLAGS = -Wall -Wextra -g 
 
+
 all: main
 
 main.o: main.c

@@ -1,2 +1,0 @@
-result x86: 251.0128
-result ARM: 2231.5242

@@ -1,22 +1,29 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "defs.h"
 #define LOOP 10000
 
 
-uint64_t start;
-uint64_t end;
+time_t start;
+time_t end;
 
 
 static inline uint64_t
 read_pmccntr(void)
 {
 	uint64_t val;
-	asm volatile("mrs %0, CNTVCT_EL0" : "=r"(val));
+	asm volatile("mrs %0, pmccntr_el0" : "=r"(val));
 	return val;
 }
 
+static inline time_t nanoseconds(void){
+
+    struct timespec ts;
+    clock_gettime(CLOCK_REALTIME, &ts);
+    return ts.tv_nsec;
+}
 
 void workA(){
     uint64_t res = 0;
@@ -26,13 +33,14 @@ void workA(){
         res += array[i];
     }
       
-    start = read_pmccntr();
+    start = nanoseconds();
 }
 
 int main(){
 
+    
     threads[0] = (thread*) malloc(sizeof(thread));
-    threads[1] = contex_switch(workA, NULL, thread_exit);
+    threads[1] = contex_switch(workA, NULL, thread_next);
     
 
     //do some work
@@ -46,11 +54,10 @@ int main(){
     //jump to thread and back
     __jmp_thread_direct(&threads[0]->tf, &threads[1]->tf);
 
-
-    end = read_pmccntr();
-   
+    end =  nanoseconds();
+    printf("%lu\n", end - start );
     FILE *f = fopen("//home//ubuntu//context-switch-bmarks//ARM//result.txt", "w");
-    printf("%lu\n", end - start);
+    fprintf(f,"%lu\n", end - start);
     fclose(f);
 
     return 0;

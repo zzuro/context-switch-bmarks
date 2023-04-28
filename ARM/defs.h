@@ -75,13 +75,13 @@ thread* threads[N];
 extern void __jmp_thread(struct thread_tf *tf);
 extern void __jmp_thread_direct(struct thread_tf *oldtf,
 				struct thread_tf *newtf);
-
+/*
 void thread_exit(){
     __jmp_thread(&threads[0]->tf);
 }
-
+*/
 void thread_next(){
-	__jmp_thread_direct(&threads[1]->tf, &threads[2]->tf);
+	__jmp_thread_direct(&threads[1]->tf, &threads[0]->tf);
 }
 
 thread* contex_switch(void (*fn)(void*), void* arg, void (*th_exit)(void)){

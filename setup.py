@@ -1,18 +1,18 @@
 import subprocess
-import numpy as np
+import pandas as pd
+from tqdm import tqdm
 
 def benchmark_fun():
-    proc = subprocess.Popen(["./x86/main"], stdout=subprocess.DEVNULL)
+    proc = subprocess.Popen(["./ARM/main"], stdout=subprocess.DEVNULL)
     proc.wait()    
-    f = open("//home//avezzu//context-switch-bmarks//x86//result.txt", 'r')
+    f = open("//home//ubuntu//context-switch-bmarks//ARM//result.txt", 'r')
     return int(f.readline())
 
 
 
-f = open("bmarks_res.txt", "w")
-
 tmp = []
-for i in range(0, 10000):
-    tmp.append(benchmark_fun())  
+for i in tqdm(range(0, 10000)):
+    res = benchmark_fun()
+    tmp.append(res)  
     
-f.write("%s\n" % np.mean(tmp))
+pd.DataFrame({'cycles':tmp}).to_csv("ARM_results.csv", index=False)
